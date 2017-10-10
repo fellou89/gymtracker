@@ -1,0 +1,28 @@
+{
+  "quotes" : [
+    {
+      "text" : "This is the real secret of life",
+      "source" : "Alan Watts"
+    },
+    {
+      "text" : "If you eant to change the world",
+      "source" : "B. D. Schiers"
+    },
+    {
+      "text" : "Awareness is the greatest agent",
+      "source" : "Eckhart Tolle"
+    },
+    {
+      "text" : "Today, you can decide to walk in freedom",
+      "source" : "Thich Nhat Hanh"
+    },
+    {
+      "text" : "No snowflake ever falls in the wrong place",
+      "source" : "Zen Proverb"
+    },
+    {
+      "text" : "When the task is done beforehand",
+      "source" : "Yuan-tong"
+    },
+  ]
+}
