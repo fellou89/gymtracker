@@ -31,7 +31,7 @@ class PostsScreen extends Component {
   componentDidMount() {
     const updateStateWith = this.props.onPostsUpdate
     // .on('value', function(snapshot) {
-    firebase.database().ref('groups/0/posts').limitToLast(20).orderByChild('timestamp')
+    firebase.database().ref('groups/0/posts').limitToLast(10).orderByChild('timestamp')
     .on('value', function(snapshot) {
       const postsData = Object.values(snapshot.val())
       updateStateWith(postsData.reverse())
@@ -41,7 +41,8 @@ class PostsScreen extends Component {
   }
 
   _onPostPress() {
-    user = firebase.auth().currentUser
+    user = this.props.user
+    console.log(user)
     this.props.onPost({
       message: this.props.message,
       user: user.firstName + ' ' + user.lastName
@@ -90,7 +91,7 @@ class PostsScreen extends Component {
 
 PostsScreen.propTypes = {
   message: PropTypes.string,
-  user: PropTypes.string,
+  user: PropTypes.object,
   leftDrawer: PropTypes.bool,
   posts: PropTypes.array,
   onMessageUpdate: PropTypes.func.isRequired,

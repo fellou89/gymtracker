@@ -9,7 +9,6 @@ import {
 } from 'react-native'
 
 import SigninContainer from '../../containers/SigninContainer'
-
 class SigninScreen extends Component {
   componentWillMount() {
     AsyncStorage.multiGet(['email','password'])
@@ -21,6 +20,9 @@ class SigninScreen extends Component {
           this.props.onPasswordUpdate(pass)
           this._onSigninPress()
         }
+      })
+      .catch((error) => {
+        throw error
       })
   }
 
@@ -35,7 +37,7 @@ class SigninScreen extends Component {
     if (!this.props.loading) {
       return (
         <TouchableOpacity style={styles.actionButton}
-                          onPress={this._onSigninPress.bind(this)}>
+                          onPress={ this._onSigninPress.bind(this) }>
           <Text style={styles.buttonText}>Sign In</Text>
         </TouchableOpacity>
       )
@@ -85,8 +87,8 @@ const styles = StyleSheet.create({
   },
   formWrap: {
     justifyContent: 'center',
-    marginLeft: 100,
-    marginRight: 100,
+    marginLeft: 90,
+    marginRight: 90,
   },
   textBox: {
     height: 37,

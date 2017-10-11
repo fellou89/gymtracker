@@ -4,10 +4,10 @@ import { connect } from 'react-redux'
 import { updatePosts, updateDrawers, updateMessage, postMessage } from '../actions'
 
 const mapStateToProps = (state) => ({
-  user: state.posts.user,
   message: state.posts.message,
   leftDrawer: state.drawers.left,
-  posts: state.posts.posts
+  posts: state.posts.posts,
+  user: state.profile.user
 })
 
 const mapDispatchToProps = (dispatch) => ({

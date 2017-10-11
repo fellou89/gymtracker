@@ -5,6 +5,20 @@ export function updateEmail(email) {
   }
 }
 
+export function updateFirstName(firstName) {
+  return {
+    type: 'UPDATE_FIRST',
+    firstName,
+  }
+}
+
+export function updateLastName(lastName) {
+  return {
+    type: 'UPDATE_LAST',
+    lastName,
+  }
+}
+
 export function updatePassword(password) {
   return {
     type: 'UPDATE_PASSWORD',
@@ -12,10 +26,23 @@ export function updatePassword(password) {
   }
 }
 
+export function updateConfirmation(confirmation) {
+  return {
+    type: 'UPDATE_CONFIRMATION',
+    confirmation,
+  }
+}
+
 export function updateUser(user) {
   return {
+    type: 'USER_UPDATE',
+    user
+  }
+}
+
+export function signinSuccess() {
+  return {
     type: 'SIGNIN_SUCCESS',
-    user,
   }
 }
 
@@ -33,11 +60,11 @@ export function updateMessage(message) {
   }
 }
 
-export function postMessage(message, user) {
+export function postMessage(message, username) {
   return {
     type: 'POST_MESSAGE',
     message,
-    user
+    username
   }
 }
 
@@ -54,3 +81,11 @@ export function updatePosts(posts) {
     posts
   }
 }
+
+export function signout() {
+  return {
+    type: 'SIGNOUT',
+  }
+}
+
+

@@ -5,6 +5,7 @@ import { setNavigator } from '../services/navigator.js'
 import { StackNavigator } from 'react-navigation'
 
 import SigninScreen from './screens/SigninScreen.js'
+import SignupScreen from './screens/SignupScreen.js'
 import PostsScreen from './screens/PostsScreen.js'
 
 import { Provider } from 'react-redux'
@@ -43,6 +44,7 @@ class App extends Component {
 
 const Stack = StackNavigator({
   Signin: {screen: SigninScreen},
+  Signup: {screen: SignupScreen},
   Posts: {screen: PostsScreen},
 })
 
