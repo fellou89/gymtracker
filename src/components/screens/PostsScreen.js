@@ -29,20 +29,12 @@ class PostsScreen extends Component {
   })
 
   componentDidMount() {
-    const updateStateWith = this.props.onPostsUpdate
-    // .on('value', function(snapshot) {
-    firebase.database().ref('groups/0/posts').limitToLast(10).orderByChild('timestamp')
-    .on('value', function(snapshot) {
-      const postsData = Object.values(snapshot.val())
-      updateStateWith(postsData.reverse())
-    })
-
     this.props.navigation.setParams({ toggleLeftDrawer: this.props.onDrawersUpdate })
+    this.props.onGetPosts(this.props.selected)
   }
 
   _onPostPress() {
     user = this.props.user
-    console.log(user)
     this.props.onPost({
       message: this.props.message,
       user: user.firstName + ' ' + user.lastName
@@ -96,7 +88,6 @@ PostsScreen.propTypes = {
   posts: PropTypes.array,
   onMessageUpdate: PropTypes.func.isRequired,
   onPost: PropTypes.func.isRequired,
-  onPostsUpdate: PropTypes.func.isRequired,
 }
 
 const styles = StyleSheet.create({

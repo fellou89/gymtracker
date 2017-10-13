@@ -1,10 +1,10 @@
 import firebase from 'firebase'
 import { reset } from '../services/navigator.js'
+import { updateUserService } from '../services/data.js'
 
-import { AsyncStorage } from 'react-native'
 import { connect } from 'react-redux'
 import { 
-  signinSuccess, updateUser,updateEmail, 
+  signinSuccess, updateEmail, 
   updateFirstName, updateLastName, 
   updatePassword, updateConfirmation
 } from '../actions'
@@ -37,30 +37,21 @@ const mapDispatchToProps = (dispatch) => ({
     if (email.length > 0 && fName.length > 0 && lName.length > 0 &&
         password.length > 0 && confirmation.length > 0 && password == confirmation) {
 
-      firebase.auth().createUserWithEmailAndPassword(email, password)
-        .then(user => {
-          const me = {
-            email: email,
-            firstName: fName,
-            lastName: lName
-          }
-
-          dispatch(updateUser(me))
-          const usersPush = firebase.database().ref('users').push()
-          usersPush.set(me)
-
-          user.sendEmailVerification()
-          try {
-            AsyncStorage.multiSet([['email', email],['password', password]])
-          } catch (e) {
-            console.log(e)
-          }
-          dispatch(signinSuccess())
-          reset('Posts')
+      firebase.auth().createUserWithEmailAndPassword(email, password).then(user => {
+        firebase.database().ref('users').push().set({
+          email: email,
+          firstName: fName,
+          lastName: lName
         })
-        .catch((error) => {
-          throw error
-        })
+        updateUserService(email, password, dispatch)
+
+        user.sendEmailVerification()
+        dispatch(signinSuccess())
+        reset('Posts')
+      })
+      .catch((error) => {
+        throw error
+      })
     }
   },
 })

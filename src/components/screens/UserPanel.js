@@ -4,20 +4,29 @@ import {
   StyleSheet,
   View,
   Text,
+  ScrollView,
   TouchableOpacity,
 } from 'react-native'
 
 import { reset } from '../../services/navigator.js'
 import { signout } from '../../actions'
 
-import UserContainer from '../../containers/UserContainer'
+import UserPanelContainer from '../../containers/UserPanelContainer'
 class UserPanel extends Component {
   _renderVerified() {
-    if (firebase.auth().currentUser.emailVerified) {
+    if (firebase.auth().currentUser && firebase.auth().currentUser.emailVerified) {
       return null
     } else {
       return (<Text style={styles.verified}> (un-verified)</Text>)
     }
+  }
+
+  _flattenedStyle(group, groupStyle, additionalStyle) {
+    return StyleSheet.flatten([styles.group, groupStyle, additionalStyle])
+  }
+
+  _onSelectPress(name) {
+    this.props.onSelectGroup(name)
   }
 
   render() {
@@ -35,12 +44,22 @@ class UserPanel extends Component {
         <View style={styles.groups}>
           <Text style={styles.groupTitle}>Groups</Text>
 
-          <TouchableOpacity style={styles.group}>
-            <Text style={styles.groupText}>Group</Text>
-          </TouchableOpacity>
+          <View>
+            <ScrollView>
+              { this.props.groups.map((g,i) => 
+                <TouchableOpacity key={i} onPress={this._onSelectPress.bind(this, g.name)}
+                  style={this._flattenedStyle(g, styles.group, {backgroundColor: ((g.name == this.props.selected) ? '#000' : '#fff')})}>
+                  <Text style={this._flattenedStyle(g, styles.groupText, {color: ((g.name == this.props.selected) ? '#fff' : '#000')})}>
+                    {g.name}
+                  </Text>
+                </TouchableOpacity>
+              )}
+            </ScrollView>
+          </View>
 
-          <TouchableOpacity style={styles.group}>
-            <Text style={styles.groupAdd}>Add Group</Text>
+          <TouchableOpacity style={styles.group}
+                            onPress={this.props.onAddGroup}>
+            <Text style={styles.groupAdd}>+ Add Group</Text>
           </TouchableOpacity>
         </View>
 
@@ -65,7 +84,11 @@ class UserPanel extends Component {
 
 UserPanel.propTypes = {
   user: PropTypes.object,
+  groups: PropTypes.array,
+  selected: PropTypes.string,
+  onAddGroup: PropTypes.func.isRequired,
   onSignout: PropTypes.func.isRequired,
+  onSelectGroup: PropTypes.func.isRequired,
 }
 
 const styles = StyleSheet.create({
@@ -123,4 +146,4 @@ const styles = StyleSheet.create({
   }
 })
 
-export default UserContainer(UserPanel)
+export default UserPanelContainer(UserPanel)

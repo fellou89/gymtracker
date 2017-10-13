@@ -1,9 +1,9 @@
 import firebase from 'firebase'
 import { reset, navigate } from '../services/navigator.js'
+import { updateUserService } from '../services/data.js'
 
-import { AsyncStorage } from 'react-native'
 import { connect } from 'react-redux'
-import { updateEmail, updatePassword, updateUser} from '../actions'
+import { updateEmail, updatePassword } from '../actions'
 
 const mapStateToProps = (state) => ({
   email: state.email,
@@ -20,15 +20,11 @@ const mapDispatchToProps = (dispatch) => ({
     dispatch(updatePassword(value))
   },
   onSignin: ({email, password}) => {
-    dispatch({type: 'SIGNIN_UPDATE'})
-    firebase.auth().signInWithEmailAndPassword(email, password)
-      .then(user => {
-        firebase.database().ref('users').orderByChild('email').equalTo(email)
-          .once('value', function(snapshot) {
-            const me = Object.values(snapshot.val())[0]
-            dispatch(updateUser(me))
-          })
-        AsyncStorage.multiSet([['email', email],['password', password]])
+    dispatch({type: 'UPDATE_SIGNIN'})
+    firebase.auth().signInWithEmailAndPassword(email, password).then(user => {
+
+        updateUserService(email, password, dispatch)
+
         reset('Posts')
       })
       .catch((error) => {

@@ -25,4 +25,8 @@ export function reset(routeName, params) {
   }
 }
 
-export function goBack() {}
+export function goBack() {
+  if (navigator) {
+    navigator.dispatch(NavigationActions.back())
+  }
+}

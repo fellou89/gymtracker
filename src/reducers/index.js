@@ -1,3 +1,4 @@
+import firebase from 'firebase'
 import { combineReducers } from 'redux'
 
 function firstName(state = '', action) {
@@ -57,7 +58,7 @@ function confirmation(state = '', action) {
 
 function signin(state = {error: '', loading: false}, action) {
   switch (action.type) {
-  case 'SIGNIN_UPDATE':
+  case 'UPDATE_SIGNIN':
     return {...state, error: '', loading: true}
   case 'SIGNIN_SUCCESS':
   case 'SIGNOUT':
@@ -69,23 +70,44 @@ function signin(state = {error: '', loading: false}, action) {
   }
 }
 
-function posts(state = {username: '', message: '', posts: []}, action) {
+function createGroup(state = {name: '', error: ''}, action) {
   switch (action.type) {
-  case 'MESSAGE_UPDATE':
-    return {...state, message: action.message}
-  case 'POST_MESSAGE':
-    return {...state, username: action.username, message: ''}
-  case 'POSTS_UPDATE':
-    return {...state, posts: action.posts}
+  case 'UPDATE_GROUP_NAME':
+    return {...state, name: action.name}
+  case 'GROUP_NAME_ERROR':
+    return {...state, error: 'Name is already used'}
+  case 'SIGNOUT':
+    return {...state, name: '', error: ''}
   default:
     return state
   }
 }
 
-function profile(state = {user: null}, action) {
+function posts(state = {message: '', posts: []}, action) {
   switch (action.type) {
-  case 'USER_UPDATE':
-    return {...state, user: action.user}
+  case 'UPDATE_MESSAGE':
+    return {...state, message: action.message}
+  case 'POST_MESSAGE':
+    return {...state, message: ''}
+  case 'UPDATE_POSTS':
+    return {...state, posts: action.posts}
+  case 'SIGNOUT':
+    return {...state, message: '', posts: []}
+  default:
+    return state
+  }
+}
+
+function profile(state = {user: {mygroups: []}, selected: ''}, action) {
+  switch (action.type) {
+  case 'UPDATE_USER':
+    const groups = (typeof action.user.mygroups == 'undefined') ? [] : Object.values(action.user.mygroups)
+    action.user.mygroups = groups
+    return {...state, user: action.user, selected: ((groups.length == 0) ? '' : groups[0].name)}
+
+  case 'SELECT_GROUP':
+    return {...state, selected: action.name}
+
   default:
     return state
   }
@@ -116,6 +138,7 @@ export default combineReducers({
   confirmation,
   signin,
   posts,
+  createGroup,
   profile,
   drawers,
 })

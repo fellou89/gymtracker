@@ -35,7 +35,7 @@ export function updateConfirmation(confirmation) {
 
 export function updateUser(user) {
   return {
-    type: 'USER_UPDATE',
+    type: 'UPDATE_USER',
     user
   }
 }
@@ -55,16 +55,15 @@ export function signinFail(error) {
 
 export function updateMessage(message) {
   return {
-    type: 'MESSAGE_UPDATE',
+    type: 'UPDATE_MESSAGE',
     message,
   }
 }
 
-export function postMessage(message, username) {
+export function postMessage(message) {
   return {
     type: 'POST_MESSAGE',
     message,
-    username
   }
 }
 
@@ -77,8 +76,28 @@ export function updateDrawers(left) {
 
 export function updatePosts(posts) {
   return { 
-    type: 'POSTS_UPDATE',
+    type: 'UPDATE_POSTS',
     posts
+  }
+}
+
+export function selectGroup(name) {
+  return { 
+    type: 'SELECT_GROUP',
+    name
+  }
+}
+
+export function updateGroupName(name) {
+  return { 
+    type: 'UPDATE_GROUP_NAME',
+    name
+  }
+}
+
+export function groupNameError() {
+  return { 
+    type: 'GROUP_NAME_ERROR',
   }
 }
 

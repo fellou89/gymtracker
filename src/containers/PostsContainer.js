@@ -1,13 +1,15 @@
-import firebase from 'firebase'
 import moment from 'moment'
+import firebase from 'firebase'
 import { connect } from 'react-redux'
+import { postPost, updatePostsWithSelected } from '../services/data.js'
 import { updatePosts, updateDrawers, updateMessage, postMessage } from '../actions'
 
 const mapStateToProps = (state) => ({
   message: state.posts.message,
   leftDrawer: state.drawers.left,
   posts: state.posts.posts,
-  user: state.profile.user
+  user: state.profile.user,
+  selected: state.profile.selected
 })
 
 const mapDispatchToProps = (dispatch) => ({
@@ -17,20 +19,19 @@ const mapDispatchToProps = (dispatch) => ({
   onPost: ({message, user}) => {
     if (message.length > 0) {
       dispatch(postMessage(message, user))
-      const postsPush = firebase.database().ref('groups/0/posts').push()
-      postsPush.set({
+      postPost({
         message: message,
         user: user,
         timestamp: moment().format()
-      })
+      }, dispatch)
     }
-  },
-  onPostsUpdate: (posts) => {
-    dispatch(updatePosts(posts))
   },
   onDrawersUpdate: (left) => {
     dispatch(updateDrawers(left))
-  }
+  },
+  onGetPosts: (selected) => {
+    updatePostsWithSelected(selected, dispatch)
+  },
 })
 
 export default connect(

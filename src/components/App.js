@@ -1,12 +1,14 @@
 import React, { Component } from 'react'
 import firebase from 'firebase'
 
+import { setUsersRef, setGroupsRef } from '../services/data.js'
 import { setNavigator } from '../services/navigator.js'
 import { StackNavigator } from 'react-navigation'
 
 import SigninScreen from './screens/SigninScreen.js'
 import SignupScreen from './screens/SignupScreen.js'
 import PostsScreen from './screens/PostsScreen.js'
+import CreateGroupScreen from './screens/CreateGroupScreen.js'
 
 import { Provider } from 'react-redux'
 
@@ -32,6 +34,8 @@ class App extends Component {
       messagingSenderId: "28136585902"
     }
     firebase.initializeApp(config)
+    setUsersRef()
+    setGroupsRef()
   }
   render() {
     return (
@@ -46,6 +50,7 @@ const Stack = StackNavigator({
   Signin: {screen: SigninScreen},
   Signup: {screen: SignupScreen},
   Posts: {screen: PostsScreen},
+  CreateGroup: {screen: CreateGroupScreen},
 })
 
 export default App
