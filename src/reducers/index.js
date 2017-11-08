@@ -58,6 +58,8 @@ function confirmation(state = '', action) {
 
 function signin(state = {error: '', loading: false}, action) {
   switch (action.type) {
+  case 'SHOW_SIGNIN':
+    return {...state, loading: false}
   case 'UPDATE_SIGNIN':
     return {...state, error: '', loading: true}
   case 'SIGNIN_SUCCESS':

@@ -1,5 +1,5 @@
 import firebase from 'firebase'
-import { reset } from '../services/navigator.js'
+import { reset, goBack } from '../services/navigator.js'
 import { updateUserService } from '../services/data.js'
 
 import { connect } from 'react-redux'
@@ -18,6 +18,10 @@ const mapStateToProps = (state) => ({
 })
 
 const mapDispatchToProps = (dispatch) => ({
+  onBackToSignin: (value) => {
+    dispatch({type: "SHOW_SIGNIN"})
+    goBack()
+  },
   onEmailUpdate: (value) => {
     dispatch(updateEmail(value))
   },

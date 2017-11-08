@@ -5,11 +5,21 @@ import {
   TextInput,
   TouchableOpacity,
   AsyncStorage,
-  StyleSheet
+  StyleSheet,
 } from 'react-native'
+import { HeaderBackButton } from 'react-navigation'
 
 import SignupContainer from '../../containers/SignupContainer'
 class SignupScreen extends Component {
+
+  static navigationOptions = ({navigation}) => ({
+    headerLeft: <HeaderBackButton onPress={ () => navigation.state.params.backToSignin() } />
+  })
+
+  componentDidMount() {
+    this.props.navigation.setParams({ backToSignin: this.props.onBackToSignin})
+  }
+
   _onSignupPress() {
     this.props.onSignup({
       email: this.props.email, 

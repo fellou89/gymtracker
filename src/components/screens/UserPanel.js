@@ -9,7 +9,17 @@ import {
 } from 'react-native'
 
 import { reset } from '../../services/navigator.js'
+import Rate from 'react-native-rate'
 import { signout } from '../../actions'
+
+let options = {
+	AppleAppID:"",
+	GooglePackageName:"com.mywebsite.myapp",
+	//AmazonPackageName:"com.mywebsite.myapp",
+	preferGoogle:true,
+	//preferInApp:false,
+	//fallbackPlatformURL:"http://www.mywebsite.com/myapp.html",
+}
 
 import UserPanelContainer from '../../containers/UserPanelContainer'
 class UserPanel extends Component {
@@ -29,8 +39,17 @@ class UserPanel extends Component {
     this.props.onSelectGroup(name)
   }
 
+  _onRatePress() {
+    Rate.rate(options, (success) => {
+			if (success) {
+				// this technically only tells us if the user successfully went to the Review Page. Whether they actually did anything, we do not know.
+      }
+		})
+	}
+
   render() {
     let user = this.props.user || {}
+
     return (
       <View style={styles.container}>
         <View style={styles.profile}>
@@ -68,7 +87,8 @@ class UserPanel extends Component {
             <Text>Help & Feedback</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity style={styles.appButton}>
+          <TouchableOpacity style={styles.appButton}
+                            onPress={this._onRatePress.bind(this)}>
             <Text>Rate us!</Text>
           </TouchableOpacity>
 

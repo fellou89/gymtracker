@@ -133,6 +133,7 @@ android {
 }
 
 dependencies {
+    compile project(':react-native-rate')
     compile project(':react-native-background-timer')
     compile project(':react-native-vector-icons')
     compile fileTree(dir: "libs", include: ["*.jar"])
