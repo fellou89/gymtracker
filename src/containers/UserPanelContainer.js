@@ -1,6 +1,5 @@
 import firebase from 'firebase'
 import { navigate, reset } from '../services/navigator.js'
-import { updatePostsWithSelected } from '../services/data.js'
 
 import { AsyncStorage } from 'react-native'
 import { connect } from 'react-redux'
@@ -27,9 +26,9 @@ const mapDispatchToProps = (dispatch) => ({
         throw error
       })
   },
-  onSelectGroup: (name) => {
-    dispatch(selectGroup(name))
-    updatePostsWithSelected(name, dispatch)
+  onSelectGroup: (group) => {
+    dispatch(selectGroup(group.name))
+    reset('Posts', {group})
   }
 })
 

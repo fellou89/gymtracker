@@ -35,17 +35,17 @@ class UserPanel extends Component {
     return StyleSheet.flatten([styles.group, groupStyle, additionalStyle])
   }
 
-  _onSelectPress(name) {
-    this.props.onSelectGroup(name)
+  _onSelectPress(group) {
+    this.props.onSelectGroup(group)
   }
 
   _onRatePress() {
     Rate.rate(options, (success) => {
-			if (success) {
-				// this technically only tells us if the user successfully went to the Review Page. Whether they actually did anything, we do not know.
+      if (success) {
+	// this technically only tells us if the user successfully went to the Review Page. Whether they actually did anything, we do not know.
       }
-		})
-	}
+    })
+  }
 
   render() {
     let user = this.props.user || {}
@@ -66,7 +66,7 @@ class UserPanel extends Component {
           <View>
             <ScrollView>
               { this.props.groups.map((g,i) => 
-                <TouchableOpacity key={i} onPress={this._onSelectPress.bind(this, g.name)}
+                <TouchableOpacity key={i} onPress={this._onSelectPress.bind(this, g)}
                   style={this._flattenedStyle(g, styles.group, {backgroundColor: ((g.name == this.props.selected) ? '#000' : '#fff')})}>
                   <Text style={this._flattenedStyle(g, styles.groupText, {color: ((g.name == this.props.selected) ? '#fff' : '#000')})}>
                     {g.name}
@@ -83,13 +83,21 @@ class UserPanel extends Component {
         </View>
 
         <View style={styles.appButtons}>
+          <TouchableOpacity style={styles.appButton}
+                            onPress={this._onRatePress.bind(this)}>
+            <Text>Rate us!</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity style={styles.appButton}>
+            <Text>Share App</Text>
+          </TouchableOpacity>
+
           <TouchableOpacity style={styles.appButton}>
             <Text>Help & Feedback</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity style={styles.appButton}
-                            onPress={this._onRatePress.bind(this)}>
-            <Text>Rate us!</Text>
+          <TouchableOpacity style={styles.appButton}>
+            <Text>User Agreement</Text>
           </TouchableOpacity>
 
           <TouchableOpacity style={styles.appButton}

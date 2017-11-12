@@ -72,7 +72,7 @@ function signin(state = {error: '', loading: false}, action) {
   }
 }
 
-function createGroup(state = {name: '', error: ''}, action) {
+function groupForm(state = {name: '', error: ''}, action) {
   switch (action.type) {
   case 'UPDATE_GROUP_NAME':
     return {...state, name: action.name}
@@ -98,6 +98,27 @@ function posts(state = {message: '', posts: []}, action) {
   default:
     return state
   }
+}
+
+function memberForm(state = {email: '', error: ''}, action) {
+  switch (action.type) {
+  case 'UPDATE_MEMBER_EMAIL':
+    return {...state, email: action.email, error: ''}
+  case 'ADD_MEMBER_ERROR':
+    return {...state, error: action.error}
+  default:
+    return state
+  }
+}
+
+function members(state = {list: []}, action) {
+  switch (action.type) {
+  case 'UPDATE_MEMBERS':
+    return {...state, list: action.members}
+  default:
+    return state
+  }
+  // action.members
 }
 
 function profile(state = {user: {mygroups: []}, selected: ''}, action) {
@@ -140,7 +161,9 @@ export default combineReducers({
   confirmation,
   signin,
   posts,
-  createGroup,
+  groupForm,
+  members,
+  memberForm,
   profile,
   drawers,
 })

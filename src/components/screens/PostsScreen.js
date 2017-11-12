@@ -14,14 +14,21 @@ import Drawer from 'react-native-drawer'
 import KeyboardSpacer from 'react-native-keyboard-spacer'
 import PostItem from '../PostItem.js'
 import UserPanel from '../screens/UserPanel.js'
+import { navigate } from '../../services/navigator.js'
 
 import PostsContainer from '../../containers/PostsContainer.js'
 class PostsScreen extends Component {
-  static navigationOptions = ({navigation}) => ({
-    title: 'Welcome',
+  static navigationOptions = ({ navigation }) => ({
+    title: navigation.state.params.group.name,
     headerLeft:
       <TouchableOpacity onPress={ () => navigation.state.params.toggleLeftDrawer('toggle') }>
-        <Text>  |||</Text>
+        <Text>  | | |</Text>
+      </TouchableOpacity>,
+    headerRight:
+      <TouchableOpacity onPress={ () => 
+        navigate('Members', { group: navigation.state.params.group })
+      }>
+        <Text>{ navigation.state.params.group.name == 'Welcome' ? '' : 'oOo  ' }</Text>
       </TouchableOpacity>,
     headerStyle: {
       backgroundColor: '#fff',
@@ -29,8 +36,26 @@ class PostsScreen extends Component {
   })
 
   componentDidMount() {
-    this.props.navigation.setParams({ toggleLeftDrawer: this.props.onDrawersUpdate })
+    this.props.navigation.setParams({ 
+      toggleLeftDrawer: this.props.onDrawersUpdate
+    })
     this.props.onGetPosts(this.props.selected)
+  }
+
+  _groupPostInput() {
+    if (this.props.navigation.state.params.group.name != 'Welcome') {
+      return <View style={styles.inputWrap}>
+        <TextInput style={styles.postInput} 
+                   value={this.props.message}
+                   onChangeText={this.props.onMessageUpdate}
+                   underlineColorAndroid={'transparent'} />
+        <TouchableOpacity onPress={this._onPostPress.bind(this)} >
+          <View style={styles.postButton}>
+            <Text style={styles.postText}>Post</Text>
+          </View>
+        </TouchableOpacity>
+      </View>
+    }
   }
 
   _onPostPress() {
@@ -63,17 +88,8 @@ class PostsScreen extends Component {
           <ScrollView style={styles.scroll}>
             { this.props.posts.map((p,i) => <PostItem {...p} key={i}/>) }
           </ScrollView>
-          <View style={styles.inputWrap}>
-            <TextInput style={styles.postInput} 
-                       value={this.props.message}
-                       onChangeText={this.props.onMessageUpdate}
-                       underlineColorAndroid={'transparent'} />
-            <TouchableOpacity onPress={this._onPostPress.bind(this)} >
-              <View style={styles.postButton}>
-                <Text style={styles.postText}>Post</Text>
-              </View>
-            </TouchableOpacity>
-          </View>
+          { this._groupPostInput() }
+          
           { this._keyboardSpacer() }
         </View>
       </Drawer>

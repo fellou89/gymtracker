@@ -9,6 +9,8 @@ import SigninScreen from './screens/SigninScreen.js'
 import SignupScreen from './screens/SignupScreen.js'
 import PostsScreen from './screens/PostsScreen.js'
 import CreateGroupScreen from './screens/CreateGroupScreen.js'
+import MembersScreen from './screens/MembersScreen.js'
+import AddMemberScreen from './screens/AddMemberScreen.js'
 
 import { Provider } from 'react-redux'
 
@@ -51,6 +53,8 @@ const Stack = StackNavigator({
   Signup: {screen: SignupScreen},
   Posts: {screen: PostsScreen},
   CreateGroup: {screen: CreateGroupScreen},
+  Members: {screen: MembersScreen},
+  AddMember: {screen: AddMemberScreen},
 })
 
 export default App

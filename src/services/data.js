@@ -1,6 +1,7 @@
 import firebase from 'firebase'
-import { updateUser, updatePosts } from '../actions'
+import { updateUser, updatePosts, updateMembers } from '../actions'
 import { AsyncStorage } from 'react-native'
+import { reset, navigate } from '../services/navigator.js'
 
 let usersRef
 let groupsRef
@@ -18,7 +19,6 @@ export function setCurrentGroupRef(gid) {
   currentGroupRef = groupsRef.child(gid)
 }
 
-
 export function updateUserService(email, password, dispatch) {
   usersRef.orderByChild('email').equalTo(email)
     .once('value', function(snapshot) {
@@ -26,12 +26,13 @@ export function updateUserService(email, password, dispatch) {
       const me = snapshot.val()[id]
       const mygroups = (typeof me.mygroups == 'undefined') ? [] : Object.values(me.mygroups)
       dispatch(updateUser({...me, id, mygroups}))
+      reset('Posts', {group: (mygroups.length > 0) ? mygroups[0] : {name: 'Welcome'} })
     })
   AsyncStorage.multiSet([['email', email],['password', password]])
 }
 
 export function updatePostsWithSelected(selected, dispatch) {
-  firebase.database().ref('groups').orderByChild('name').equalTo(selected)
+  groupsRef.orderByChild('name').equalTo(selected)
     .on('value', function(groupsSnap) {
       if (groupsSnap.val()) {
         setCurrentGroupRef(Object.keys(groupsSnap.val())[0])
@@ -42,6 +43,24 @@ export function updatePostsWithSelected(selected, dispatch) {
           })
       }
     })
+}
+
+export function updateMembersForGroup(groupId, dispatch) {
+  groupsRef.child(groupId).on('value', function(snapshot) {
+    finalMembers = []
+
+    groupMembers = Object.values(snapshot.val().members)
+    groupMembers.forEach(function (gMember) {
+      usersRef.child(gMember.id).on('value', function(userSnapshot) {
+        user = userSnapshot.val()
+        gMember.name = user.firstName + " " + user.lastName
+        finalMembers.push(gMember)
+        if (finalMembers.length == groupMembers.length) {
+          dispatch(updateMembers(finalMembers))
+        }
+      })
+    })
+  })
 }
 
 export function postPost(postData, dispatch) {

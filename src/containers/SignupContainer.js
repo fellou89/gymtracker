@@ -1,5 +1,5 @@
 import firebase from 'firebase'
-import { reset, goBack } from '../services/navigator.js'
+import { goBack } from '../services/navigator.js'
 import { updateUserService } from '../services/data.js'
 
 import { connect } from 'react-redux'
@@ -47,11 +47,12 @@ const mapDispatchToProps = (dispatch) => ({
           firstName: fName,
           lastName: lName
         })
+
+        // moves flow into Posts
         updateUserService(email, password, dispatch)
 
         user.sendEmailVerification()
         dispatch(signinSuccess())
-        reset('Posts')
       })
       .catch((error) => {
         throw error

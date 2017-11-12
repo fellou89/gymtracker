@@ -1,5 +1,4 @@
 import moment from 'moment'
-import firebase from 'firebase'
 import { connect } from 'react-redux'
 import { postPost, updatePostsWithSelected } from '../services/data.js'
 import { updatePosts, updateDrawers, updateMessage, postMessage } from '../actions'

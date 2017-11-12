@@ -1,5 +1,5 @@
 import firebase from 'firebase'
-import { reset, navigate } from '../services/navigator.js'
+import { navigate } from '../services/navigator.js'
 import { updateUserService } from '../services/data.js'
 
 import { connect } from 'react-redux'
@@ -23,9 +23,8 @@ const mapDispatchToProps = (dispatch) => ({
     dispatch({type: 'UPDATE_SIGNIN'})
     firebase.auth().signInWithEmailAndPassword(email, password).then(user => {
 
+        // moves flow into Posts
         updateUserService(email, password, dispatch)
-
-        reset('Posts')
       })
       .catch((error) => {
         if (!firebase.auth().currentUser) {

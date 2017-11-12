@@ -1,16 +1,15 @@
 import moment from 'moment'
 import firebase from 'firebase'
-import { goBack } from '../services/navigator.js'
-import { updatePostsWithSelected } from '../services/data.js'
+import { reset, goBack } from '../services/navigator.js'
 
 import { AsyncStorage } from 'react-native'
 import { connect } from 'react-redux'
 import { updateDrawers, updateGroupName, groupNameError, selectGroup, updateUser } from '../actions'
 
 const mapStateToProps = (state) => ({
-  groupName: state.createGroup.name,
+  groupName: state.groupForm.name,
   user: state.profile.user,
-  nameError: state.createGroup.error
+  nameError: state.groupForm.error
 })
 
 const mapDispatchToProps = (dispatch) => ({
@@ -27,20 +26,21 @@ const mapDispatchToProps = (dispatch) => ({
         if (result) {
           const groups = Object.values(result)
           const keys = Object.keys(result)
-          groups.map(function(g,i) {
+          groups.map(function(group,i) {
             // if group has current user as memeber, it's the right group
-            if (g.members.map((m,i) => m.email).indexOf(user.email) >= 0) {
+            if (group.members.map((m,i) => m.email).indexOf(user.email) >= 0) {
 
               // listen for change to user (mygroups)
               firebase.database().ref().child('users').child(user.id).on('value', function(snapshot) {
                 dispatch(updateUser({...snapshot.val(), id: user.id}))
                 dispatch(selectGroup(groupName))
-                updatePostsWithSelected(groupName, dispatch)
+                group.id = keys[i]
+                reset('Posts', {group})
               })
 
               // add group to mygroups for current user
               firebase.database().ref().child('users').child(user.id).child('mygroups').push()
-                .set({id: keys[i], name: groupName})
+                .set({id: keys[i], name: groupName, created_by: user.id})
 
               dispatch(updateDrawers('close'))
               dispatch(updateGroupName(''))
@@ -51,10 +51,11 @@ const mapDispatchToProps = (dispatch) => ({
         }
       })
 
-      // create group with current user as member and initial post
+      creator = {id: user.id, email: user.email}
       groupsRef.push().set({
         name: groupName,
-        members: [{id: user.id, email: user.email}],
+        created_by: creator.id,
+        members: [creator],
         organization: false,
         posts: [{
           user: user.firstName + user.lastName,

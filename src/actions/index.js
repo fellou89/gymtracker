@@ -101,6 +101,27 @@ export function groupNameError() {
   }
 }
 
+export function updateMembers(members) {
+  return { 
+    type: 'UPDATE_MEMBERS',
+    members
+  }
+}
+
+export function updateMemberEmail(email) {
+  return {
+    type: 'UPDATE_MEMBER_EMAIL',
+    email
+  }
+}
+
+export function addMemberError(error) {
+  return {
+    type: 'ADD_MEMBER_ERROR',
+    error
+  }
+}
+
 export function signout() {
   return {
     type: 'SIGNOUT',
