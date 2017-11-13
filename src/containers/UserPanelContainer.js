@@ -12,8 +12,11 @@ const mapStateToProps = (state) => ({
 })
 
 const mapDispatchToProps = (dispatch) => ({
-  onAddGroup: (group) => {
+  onAddGroup: () => {
     navigate('CreateGroup')
+  },
+  onEditGroup: (group, currentUser) => {
+    navigate('EditGroup', {admin: group.created_by == currentUser.id})
   },
   onSignout: ({email, password}) => {
     firebase.auth().signOut().then(function() {

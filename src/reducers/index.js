@@ -72,14 +72,25 @@ function signin(state = {error: '', loading: false}, action) {
   }
 }
 
-function groupForm(state = {name: '', error: ''}, action) {
+function groupForm(state = {name: '', organization: false, error: '',
+  primary: '#ddd', secondary: '#ccd', tertiary: '#fff',
+  primAlt: '#000', secAlt: '#000', tertAlt: '#000',}, action) {
+
   switch (action.type) {
   case 'UPDATE_GROUP_NAME':
     return {...state, name: action.name}
+  case 'CHANGE_GROUP_ORGANIZATION':
+    return {...state, organization: action.value}
+  case 'UPDATE_GROUP_COLORS':
+    return {...state, primary: action.primary, secondary: action.secondary, tertiary: action.tertiary,
+      primAlt: action.primAlt, secAlt: action.secAlt, tertAlt: action.tertAlt}
   case 'GROUP_NAME_ERROR':
     return {...state, error: 'Name is already used'}
+  case 'CREATE_GROUP_SUCCESS':
   case 'SIGNOUT':
-    return {...state, name: '', error: ''}
+    return {...state, name: '', organization: false, error: '',
+      primary: '#ddd', secondary: '#ccd', tertiary: '#fff',
+      primAlt: '#000', secAlt: '#000', tertAlt: '#000'}
   default:
     return state
   }

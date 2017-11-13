@@ -1,5 +1,5 @@
 import firebase from 'firebase'
-import { updateUser, updatePosts, updateMembers } from '../actions'
+import { signout, updateUser, updatePosts, updateMembers } from '../actions'
 import { AsyncStorage } from 'react-native'
 import { reset, navigate } from '../services/navigator.js'
 
@@ -22,11 +22,16 @@ export function setCurrentGroupRef(gid) {
 export function updateUserService(email, password, dispatch) {
   usersRef.orderByChild('email').equalTo(email)
     .once('value', function(snapshot) {
-      const id = Object.keys(snapshot.val())[0]
-      const me = snapshot.val()[id]
-      const mygroups = (typeof me.mygroups == 'undefined') ? [] : Object.values(me.mygroups)
-      dispatch(updateUser({...me, id, mygroups}))
-      reset('Posts', {group: (mygroups.length > 0) ? mygroups[0] : {name: 'Welcome'} })
+      if (snapshot.val()) {
+        const id = Object.keys(snapshot.val())[0]
+        const me = snapshot.val()[id]
+        const mygroups = (typeof me.mygroups == 'undefined') ? [] : Object.values(me.mygroups)
+        dispatch(updateUser({...me, id, mygroups}))
+        reset('Posts', {group: (mygroups.length > 0) ? mygroups[0] : {name: 'Welcome'} })
+      } else {
+        dispatch(signout())
+        AsyncStorage.multiSet([['email', ''],['password', '']])
+      }
     })
   AsyncStorage.multiSet([['email', email],['password', password]])
 }

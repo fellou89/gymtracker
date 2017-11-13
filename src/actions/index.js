@@ -88,10 +88,35 @@ export function selectGroup(name) {
   }
 }
 
+export function changeGroupOrganization(value) {
+  return { 
+    type: 'CHANGE_GROUP_ORGANIZATION',
+    value
+  }
+}
+
+export function updateGroupColors(primary,primAlt,secondary,secAlt,tertiary,tertAlt) {
+  return { 
+    type: 'UPDATE_GROUP_COLORS',
+    primary,
+    primAlt,
+    secondary,
+    secAlt,
+    tertiary,
+    tertAlt
+  }
+}
+
 export function updateGroupName(name) {
   return { 
     type: 'UPDATE_GROUP_NAME',
     name
+  }
+}
+
+export function createGroupSuccess() {
+  return { 
+    type: 'CREATE_GROUP_SUCCESS',
   }
 }
 
@@ -127,5 +152,3 @@ export function signout() {
     type: 'SIGNOUT',
   }
 }
-
-

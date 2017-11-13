@@ -66,7 +66,9 @@ class UserPanel extends Component {
           <View>
             <ScrollView>
               { this.props.groups.map((g,i) => 
-                <TouchableOpacity key={i} onPress={this._onSelectPress.bind(this, g)}
+                <TouchableOpacity key={i} 
+                  onPress={this._onSelectPress.bind(this, g)}
+                  onLongPress={ () => this.props.onEditGroup(g) }
                   style={this._flattenedStyle(g, styles.group, {backgroundColor: ((g.name == this.props.selected) ? '#000' : '#fff')})}>
                   <Text style={this._flattenedStyle(g, styles.groupText, {color: ((g.name == this.props.selected) ? '#fff' : '#000')})}>
                     {g.name}
@@ -115,6 +117,7 @@ UserPanel.propTypes = {
   groups: PropTypes.array,
   selected: PropTypes.string,
   onAddGroup: PropTypes.func.isRequired,
+  onEditGroup: PropTypes.func.isRequired,
   onSignout: PropTypes.func.isRequired,
   onSelectGroup: PropTypes.func.isRequired,
 }

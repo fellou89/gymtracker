@@ -21,7 +21,7 @@ class AddMemberScreen extends Component {
     return (
       <View style={styles.container}>
         <View style={styles.formWrap}>
-          <Text style={styles.formTitle}>Add Member</Text>
+          <Text style={styles.formTitle}>New Member</Text>
 
           <TextInput style={styles.textBox} 
                      value={this.props.memberEmail}
@@ -33,7 +33,7 @@ class AddMemberScreen extends Component {
 
           <TouchableOpacity style={styles.actionButton}
                             onPress={this._onAddMemberPress.bind(this)}>
-            <Text style={styles.buttonText}>Add Member</Text>
+            <Text style={styles.buttonText}>Add</Text>
           </TouchableOpacity>
 
         </View>
