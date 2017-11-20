@@ -19,15 +19,30 @@ export function setCurrentGroupRef(gid) {
   currentGroupRef = groupsRef.child(gid)
 }
 
-export function updateUserService(email, password, dispatch) {
+export function updateUserService(email, password, defaultColors, dispatch) {
   usersRef.orderByChild('email').equalTo(email)
     .once('value', function(snapshot) {
       if (snapshot.val()) {
         const id = Object.keys(snapshot.val())[0]
         const me = snapshot.val()[id]
         const mygroups = (typeof me.mygroups == 'undefined') ? [] : Object.values(me.mygroups)
+
         dispatch(updateUser({...me, id, mygroups}))
-        reset('Posts', {group: (mygroups.length > 0) ? mygroups[0] : {name: 'Welcome'} })
+        if (mygroups.length == 0) {
+          reset('Posts', {group: {name: 'Welcome', colors: defaultColors}})
+        } else {
+          mygroups.map((g,i) => {
+            groupsRef.child(g.id).on('value', function(groupSnap) {
+              const group = groupSnap.val()
+              g.colors = group.colors
+
+              if (i == mygroups.length-1) {
+                reset('Posts', {group: mygroups[0]})
+              }
+            })
+          })
+        }
+
       } else {
         dispatch(signout())
         AsyncStorage.multiSet([['email', ''],['password', '']])
@@ -37,16 +52,11 @@ export function updateUserService(email, password, dispatch) {
 }
 
 export function updatePostsWithSelected(selected, dispatch) {
-  groupsRef.orderByChild('name').equalTo(selected)
-    .on('value', function(groupsSnap) {
-      if (groupsSnap.val()) {
-        setCurrentGroupRef(Object.keys(groupsSnap.val())[0])
-        currentGroupRef.child('posts').limitToLast(10).orderByChild('timestamp')
-          .on('value', function(postsSnap) {
-            const postsData = Object.values(postsSnap.val())
-            dispatch(updatePosts(postsData.reverse()))
-          })
-      }
+  setCurrentGroupRef(selected)
+  currentGroupRef.child('posts').limitToLast(10).orderByChild('timestamp')
+    .on('value', function(postsSnap) {
+      const postsData = Object.values(postsSnap.val())
+      dispatch(updatePosts(postsData.reverse()))
     })
 }
 

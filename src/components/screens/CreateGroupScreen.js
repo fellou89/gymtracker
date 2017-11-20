@@ -4,128 +4,79 @@ import {
   Text,
   Switch,
   TextInput,
+  ScrollView,
   TouchableOpacity,
   AsyncStorage,
   StyleSheet
 } from 'react-native'
-import { ColorPicker } from 'react-native-color-picker'
 
 import CreateGroupContainer from '../../containers/CreateGroupContainer'
 class CreateGroupScreen extends Component {
   constructor(props) {
     super(props);
-    this.state = {currentColor: 0};
+    this.state = {currentColor: 0, isOrganization: false, selectedOrg: 0};
   }
 
   _onCreateGroupPress() {
-    this.props.onCreateGroup({
-      groupName: this.props.groupName,
-      user: this.props.user
-    })
+    this.props.onCreateGroup(
+      this.state.isOrganization ? {
+        groupName: this.props.groupName,
+        groupColors: this.props.defaultColors,
+        groupOrganization: null,
+        user: this.props.user,
+      } : {
+        groupName: this.props.groupName,
+        groupColors: this.props.user.myorgs[this.state.selectedOrg].colors,
+        groupOrganization: this.props.user.myorgs[this.state.selectedOrg],
+        user: this.props.user,
+      }
+    )
   }
 
-  _organizationViews(is, colorLabels, colorIndex) {
-    const colorLabel = colorLabels[colorIndex]
-    const colors = [this.props.primary, this.props.primAlt, this.props.secondary, this.props.secAlt, this.props.tertiary, this.props.tertAlt]
+  _organizationSwitch(show) {
+    if (show) {
+      return <View style={styles.organizationWrap}>
+        <Text style={styles.organization}>Organization: </Text>
+        <Switch style={styles.organizationSwitch} value={this.state.isOrganization}
+          onValueChange={(value) => this.setState({isOrganization: value})} />
+      </View>
+    }
+  }
+
+  _organizationViews(is) {
     if (is) {
-      return <View style={{height: 250, paddingTop: 10}}>
-        <View style={{flex: 1, flexDirection: 'row', alignItems: 'stretch', borderRadius: 10, borderWidth: 1, overflow: 'hidden'}}>
-          <TouchableOpacity onPress={() => this.setState({currentColor: 0})}
-            style={{flex: 1, width: null, backgroundColor: this.props.primary}}/>
-          <TouchableOpacity onPress={() => this.setState({currentColor: 1})}
-            style={{flex: 1, width: null, backgroundColor: this.props.primAlt}}/>
-          <TouchableOpacity onPress={() => this.setState({currentColor: 2})}
-            style={{flex: 1, width: null, backgroundColor: this.props.secondary}}/>
-          <TouchableOpacity onPress={() => this.setState({currentColor: 3})}
-            style={{flex: 1, width: null, backgroundColor: this.props.secAlt}}/>
-          <TouchableOpacity onPress={() => this.setState({currentColor: 4})}
-            style={{flex: 1, width: null, backgroundColor: this.props.tertiary}}/>
-          <TouchableOpacity onPress={() => this.setState({currentColor: 5})}
-            style={{flex: 1, width: null, backgroundColor: this.props.tertAlt}}/>
-        </View>
-        <Text style={[styles.colorLabel, this.backgroundTextStyle(this.props.secAlt)]}>{colorLabel}</Text>
-        <View style={{height: 200}}>
-          <ColorPicker 
-            color={colors[colorIndex]}
-            onColorChange={c => this.props.onColorChange(colors, colorIndex, c)}
-            style={{flex: 1}}/>
-        </View>
+      return <View style={{height: 50, paddingTop: 10}}>
+        <ScrollView style={{flex:1, paddingHorizontal: 10}}>
+          { this.props.user.myorgs.map((o,i) => 
+              <TouchableOpacity key={i} style={{paddingVertical: 5}}
+                onPress={() => this.setState({selectedOrg: i})}>
+                <Text style={{color: ((this.state.selectedOrg == i) ? '#fff' : '#000')}}>{o.name}</Text>
+              </TouchableOpacity>) }
+        </ScrollView>
       </View>
     }
   }
   
-  textBoxStyle(tertiary, tertAlt) {
-    return {
-      height: 35,
-      paddingBottom: 2,
-      paddingHorizontal: 5,
-      marginBottom: 10,
-      borderRadius: 5,
-      borderWidth: 1,
-      borderColor: '#999',
-      backgroundColor: tertiary,
-      color: tertAlt
-    }
-  }
-
-  actionButtonStyle(primary) {
-    return {
-      padding: 5,
-      borderRadius: 5,
-      borderWidth: 1,
-      borderColor: '#999',
-      backgroundColor: primary,
-    }
-  }
-
-  actionTextStyle(primAlt) {
-    return {
-      alignSelf: 'center',
-      fontWeight: 'bold',
-      color: primAlt
-    }
-  }
-
-  containerStyle(secondary) {
-    return {
-      flex: 1,
-      justifyContent: 'center',
-      backgroundColor: secondary
-    }
-  }
-
-  backgroundTextStyle(secAlt) {
-    return {
-      color: secAlt
-    }
-  }
-
   render() {
-    const colors = ['Primary Color', 'Primary Alternate', 'Secondary Color', 'Secondary Alternate', 'Tertiary Color', 'Tertiary Alternate']
     return (
-      <View style={this.containerStyle(this.props.secondary)}>
+      <View style={styles.container}>
         <View style={styles.formWrap}>
-          <Text style={[styles.formTitle, this.backgroundTextStyle(this.props.secAlt)]}>New Group</Text>
+          <Text style={styles.formTitle}>New Group</Text>
 
-          <TextInput style={this.textBoxStyle(this.props.tertiary, this.props.tertAlt)} 
+          <TextInput style={styles.textBox} 
                      value={this.props.groupName}
                      placeholder='Group Name'
                      onChangeText={this.props.onGroupNameUpdate}
                      underlineColorAndroid={'transparent'} />
 
-          <View style={styles.organizationWrap}>
-            <Text style={[styles.organization, this.backgroundTextStyle(this.props.secAlt)]}>Organization: </Text>
-            <Switch style={styles.organizationSwitch} value={this.props.organization}
-              onValueChange={(value) => this.props.onOrganizationChange(value)} />
-          </View>
-
-          { this._organizationViews(this.props.organization, colors, this.state.currentColor) }
+          { this._organizationSwitch(this.props.user.myorgs.length > 0) }
+          { this._organizationViews(this.state.isOrganization) }
 
           <Text style={styles.nameError}>{this.props.nameError}</Text>
 
-          <TouchableOpacity style={this.actionButtonStyle(this.props.primary)}
+          <TouchableOpacity style={styles.actionButton}
                             onPress={this._onCreateGroupPress.bind(this)}>
-            <Text style={this.actionTextStyle(this.props.primAlt)}>Create</Text>
+            <Text style={styles.actionText}>Create</Text>
           </TouchableOpacity>
 
         </View>
@@ -139,14 +90,28 @@ class CreateGroupScreen extends Component {
 CreateGroupScreen.propTypes = {
   groupName: PropTypes.string,
   nameError: PropTypes.string,
-  organization: PropTypes.bool,
-  onColorChange: PropTypes.func.isRequired,
+  organization: PropTypes.string,
   onOrganizationChange: PropTypes.func.isRequired,
   onGroupNameUpdate: PropTypes.func.isRequired,
   onCreateGroup: PropTypes.func.isRequired,
 }
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    backgroundColor: '#ccd'
+  },
+  textBox: {
+    height: 35,
+    paddingBottom: 2,
+    paddingHorizontal: 5,
+    marginBottom: 10,
+    borderRadius: 5,
+    borderWidth: 1,
+    borderColor: '#999',
+    backgroundColor: '#fff'
+  },
   formWrap: {
     justifyContent: 'center',
     marginLeft: 80,
@@ -157,7 +122,6 @@ const styles = StyleSheet.create({
     fontSize: 20,
     textAlign: 'center',
   },
-  
   colorWrap: {
     marginTop: 10,
     height: 400
@@ -186,6 +150,17 @@ const styles = StyleSheet.create({
     fontSize: 20
   },
   organizationSwitch: {
+  },
+  actionButton: {
+    padding: 5,
+    borderRadius: 5,
+    borderWidth: 1,
+    borderColor: '#999',
+    backgroundColor: '#ddd',
+  },
+  actionText: {
+    alignSelf: 'center',
+    fontWeight: 'bold',
   },
   nameError: {
     color: '#f00'

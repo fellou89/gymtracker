@@ -30,6 +30,7 @@ class SigninScreen extends Component {
     this.props.onSignin({
       email: this.props.email, 
       password: this.props.password,
+      defaultColors: this.props.defaultColors
     })
   }
 

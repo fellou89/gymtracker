@@ -72,24 +72,39 @@ function signin(state = {error: '', loading: false}, action) {
   }
 }
 
-function groupForm(state = {name: '', organization: false, error: '',
-  primary: '#ddd', secondary: '#ccd', tertiary: '#fff',
-  primAlt: '#000', secAlt: '#000', tertAlt: '#000',}, action) {
+function groupForm(state = {name: '', error: '', organization: ''}, action) {
 
   switch (action.type) {
   case 'UPDATE_GROUP_NAME':
     return {...state, name: action.name}
-  case 'CHANGE_GROUP_ORGANIZATION':
-    return {...state, organization: action.value}
-  case 'UPDATE_GROUP_COLORS':
-    return {...state, primary: action.primary, secondary: action.secondary, tertiary: action.tertiary,
-      primAlt: action.primAlt, secAlt: action.secAlt, tertAlt: action.tertAlt}
+  case 'UPDATE_GROUP_ORGANIZATION':
+    return {...state, organization: action.organization}
   case 'GROUP_NAME_ERROR':
     return {...state, error: 'Name is already used'}
   case 'CREATE_GROUP_SUCCESS':
   case 'SIGNOUT':
-    return {...state, name: '', organization: false, error: '',
-      primary: '#ddd', secondary: '#ccd', tertiary: '#fff',
+    return {...state, name: '', organization: '', error: ''}
+  default:
+    return state
+  }
+}
+
+function orgForm(state = {name: '', error: '',
+  primary: '#fff', secondary: '#ccd', tertiary: '#fff',
+  primAlt: '#000', secAlt: '#000', tertAlt: '#000',}, action) {
+
+  switch (action.type) {
+  case 'UPDATE_ORG_NAME':
+    return {...state, name: action.name}
+  case 'UPDATE_ORG_COLORS':
+    return {...state, primary: action.primary, secondary: action.secondary, tertiary: action.tertiary,
+      primAlt: action.primAlt, secAlt: action.secAlt, tertAlt: action.tertAlt}
+  case 'ORG_NAME_ERROR':
+    return {...state, error: 'Name is already used'}
+  case 'CREATE_ORG_SUCCESS':
+  case 'SIGNOUT':
+    return {...state, name: '', error: '',
+      primary: '#fff', secondary: '#ccd', tertiary: '#fff',
       primAlt: '#000', secAlt: '#000', tertAlt: '#000'}
   default:
     return state
@@ -137,10 +152,14 @@ function profile(state = {user: {mygroups: []}, selected: ''}, action) {
   case 'UPDATE_USER':
     const groups = (typeof action.user.mygroups == 'undefined') ? [] : Object.values(action.user.mygroups)
     action.user.mygroups = groups
-    return {...state, user: action.user, selected: ((groups.length == 0) ? '' : groups[0].name)}
+
+    const orgs = (typeof action.user.myorgs == 'undefined') ? [] : Object.values(action.user.myorgs)
+    action.user.myorgs = orgs
+
+    return {...state, user: action.user, selected: ((groups.length == 0) ? '' : groups[0].id)}
 
   case 'SELECT_GROUP':
-    return {...state, selected: action.name}
+    return {...state, selected: action.id}
 
   default:
     return state
@@ -175,6 +194,7 @@ export default combineReducers({
   groupForm,
   members,
   memberForm,
+  orgForm,
   profile,
   drawers,
 })

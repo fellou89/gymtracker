@@ -68,9 +68,9 @@ class UserPanel extends Component {
               { this.props.groups.map((g,i) => 
                 <TouchableOpacity key={i} 
                   onPress={this._onSelectPress.bind(this, g)}
-                  onLongPress={ () => this.props.onEditGroup(g) }
-                  style={this._flattenedStyle(g, styles.group, {backgroundColor: ((g.name == this.props.selected) ? '#000' : '#fff')})}>
-                  <Text style={this._flattenedStyle(g, styles.groupText, {color: ((g.name == this.props.selected) ? '#fff' : '#000')})}>
+                  onLongPress={ () => this.props.onEditGroup(g, user) }
+                  style={this._flattenedStyle(g, styles.group, {backgroundColor: ((g.id == this.props.selected) ? '#000' : '#fff')})}>
+                  <Text style={this._flattenedStyle(g, styles.groupText, {color: ((g.id == this.props.selected) ? '#fff' : '#000')})}>
                     {g.name}
                   </Text>
                 </TouchableOpacity>
@@ -94,8 +94,9 @@ class UserPanel extends Component {
             <Text>Share App</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity style={styles.appButton}>
-            <Text>Help & Feedback</Text>
+          <TouchableOpacity style={styles.appButton}
+                            onPress={this.props.onCreateOrganization}>
+            <Text>{ user.myorgs.length > 0 ? 'Organizations' : 'Create Organization' }</Text>
           </TouchableOpacity>
 
           <TouchableOpacity style={styles.appButton}>

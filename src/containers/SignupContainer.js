@@ -37,7 +37,7 @@ const mapDispatchToProps = (dispatch) => ({
   onConfirmationUpdate: (value) => {
     dispatch(updateConfirmation(value))
   },
-  onSignup: ({email, fName, lName, password, confirmation}) => {
+  onSignup: ({email, fName, lName, password, confirmation, defaultColors}) => {
     if (email.length > 0 && fName.length > 0 && lName.length > 0 &&
         password.length > 0 && confirmation.length > 0 && password == confirmation) {
 
@@ -49,7 +49,7 @@ const mapDispatchToProps = (dispatch) => ({
         })
 
         // moves flow into Posts
-        updateUserService(email, password, dispatch)
+        updateUserService(email, password, defaultColors, dispatch)
 
         user.sendEmailVerification()
         dispatch(signinSuccess())

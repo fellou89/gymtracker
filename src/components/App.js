@@ -9,6 +9,7 @@ import SigninScreen from './screens/SigninScreen.js'
 import SignupScreen from './screens/SignupScreen.js'
 import PostsScreen from './screens/PostsScreen.js'
 import CreateGroupScreen from './screens/CreateGroupScreen.js'
+import CreateOrganizationScreen from './screens/CreateOrganizationScreen.js'
 import MembersScreen from './screens/MembersScreen.js'
 import AddMemberScreen from './screens/AddMemberScreen.js'
 
@@ -52,6 +53,7 @@ const Stack = StackNavigator({
   Signin: {screen: SigninScreen},
   Signup: {screen: SignupScreen},
   Posts: {screen: PostsScreen},
+  CreateOrganization: {screen: CreateOrganizationScreen},
   CreateGroup: {screen: CreateGroupScreen},
   Members: {screen: MembersScreen},
   AddMember: {screen: AddMemberScreen},

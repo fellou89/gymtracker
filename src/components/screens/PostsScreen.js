@@ -31,7 +31,7 @@ class PostsScreen extends Component {
         <Text>{ navigation.state.params.group.name == 'Welcome' ? '' : 'oOo  ' }</Text>
       </TouchableOpacity>,
     headerStyle: {
-      backgroundColor: '#fff',
+      backgroundColor: navigation.state.params.group.colors.primary,
     }
   })
 
@@ -39,7 +39,9 @@ class PostsScreen extends Component {
     this.props.navigation.setParams({ 
       toggleLeftDrawer: this.props.onDrawersUpdate
     })
-    this.props.onGetPosts(this.props.selected)
+    if (this.props.navigation.state.params.group.name != 'Welcome') {
+      this.props.onGetPosts(this.props.selected)
+    }
   }
 
   _groupPostInput() {

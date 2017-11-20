@@ -27,6 +27,7 @@ class SignupScreen extends Component {
       lName: this.props.lastName, 
       password: this.props.password,
       confirmation: this.props.confirmation,
+      defaultColors: this.props.navigation.state.params.defaultColors
     })
   }
 

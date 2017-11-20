@@ -9,7 +9,15 @@ const mapStateToProps = (state) => ({
   email: state.email,
   password: state.password,
   error: state.signin.error,
-  loading: state.signin.loading
+  loading: state.signin.loading,
+  defaultColors: {
+    primary: state.orgForm.primary,
+    primAlt: state.orgForm.primAlt,
+    secondary: state.orgForm.secondary,
+    secAlt: state.orgForm.secAlt,
+    tertiary: state.orgForm.tertiary,
+    tertAlt: state.orgForm.tertAlt
+  }
 })
 
 const mapDispatchToProps = (dispatch) => ({
@@ -19,16 +27,16 @@ const mapDispatchToProps = (dispatch) => ({
   onPasswordUpdate: (value) => {
     dispatch(updatePassword(value))
   },
-  onSignin: ({email, password}) => {
+  onSignin: ({email, password, defaultColors}) => {
     dispatch({type: 'UPDATE_SIGNIN'})
     firebase.auth().signInWithEmailAndPassword(email, password).then(user => {
 
         // moves flow into Posts
-        updateUserService(email, password, dispatch)
+        updateUserService(email, password, defaultColors, dispatch)
       })
       .catch((error) => {
         if (!firebase.auth().currentUser) {
-          navigate('Signup')
+          navigate('Signup', {defaultColors})
 
         } else {
           // user was logged in, but errors will be caught here and stack trace won't pop up, so throw error

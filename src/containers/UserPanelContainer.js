@@ -12,6 +12,9 @@ const mapStateToProps = (state) => ({
 })
 
 const mapDispatchToProps = (dispatch) => ({
+  onCreateOrganization: () => {
+    navigate('CreateOrganization')
+  },
   onAddGroup: () => {
     navigate('CreateGroup')
   },
@@ -30,7 +33,7 @@ const mapDispatchToProps = (dispatch) => ({
       })
   },
   onSelectGroup: (group) => {
-    dispatch(selectGroup(group.name))
+    dispatch(selectGroup(group.id))
     reset('Posts', {group})
   }
 })

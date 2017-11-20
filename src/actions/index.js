@@ -81,29 +81,17 @@ export function updatePosts(posts) {
   }
 }
 
-export function selectGroup(name) {
+export function selectGroup(id) {
   return { 
     type: 'SELECT_GROUP',
-    name
+    id
   }
 }
 
-export function changeGroupOrganization(value) {
+export function updateGroupOrganization(organization) {
   return { 
-    type: 'CHANGE_GROUP_ORGANIZATION',
-    value
-  }
-}
-
-export function updateGroupColors(primary,primAlt,secondary,secAlt,tertiary,tertAlt) {
-  return { 
-    type: 'UPDATE_GROUP_COLORS',
-    primary,
-    primAlt,
-    secondary,
-    secAlt,
-    tertiary,
-    tertAlt
+    type: 'UPDATE_GROUP_ORGANIZATION',
+    organization
   }
 }
 
@@ -144,6 +132,37 @@ export function addMemberError(error) {
   return {
     type: 'ADD_MEMBER_ERROR',
     error
+  }
+}
+
+export function updateOrgColors(primary,primAlt,secondary,secAlt,tertiary,tertAlt) {
+  return { 
+    type: 'UPDATE_ORG_COLORS',
+    primary,
+    primAlt,
+    secondary,
+    secAlt,
+    tertiary,
+    tertAlt
+  }
+}
+
+export function updateOrgName(name) {
+  return { 
+    type: 'UPDATE_ORG_NAME',
+    name
+  }
+}
+
+export function createOrgSuccess() {
+  return { 
+    type: 'CREATE_ORG_SUCCESS',
+  }
+}
+
+export function orgNameError() {
+  return { 
+    type: 'ORG_NAME_ERROR',
   }
 }
 
